@@ -119,4 +119,27 @@ class User extends Authenticatable
     {
         return $this->hasMany(Job::class);
     }
+
+    public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class);
+    }
+    
+    public function jobApplications()
+    {
+        return $this->hasMany(JobApplication::class);
+    }
+
+    public function savedItems()
+    {
+        return $this->hasMany(SavedItem::class);
+    }
+
+    public function hasSaved($model)
+    {
+        return $this->savedItems()
+            ->where('saveable_id', $model->id)
+            ->where('saveable_type', get_class($model))
+            ->exists();
+    }
 }

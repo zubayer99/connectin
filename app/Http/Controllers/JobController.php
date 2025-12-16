@@ -65,4 +65,33 @@ class JobController extends Controller
     {
         return view('jobs.show', compact('job'));
     }
+
+    public function apply(Request $request, Job $job)
+    {
+        if ($job->user_id === Auth::id()) {
+            return back()->with('error', 'You cannot apply to your own job.');
+        }
+
+        if ($job->isAppliedBy(Auth::user())) {
+            return back()->with('error', 'You have already applied to this job.');
+        }
+
+        $job->applications()->create([
+            'user_id' => Auth::id(),
+            // Basic Easy Apply just uses profile, no cover letter for now for simplicity
+        ]);
+
+        return back()->with('success', 'Application submitted successfully!');
+    }
+
+    public function applicants(Job $job)
+    {
+        if ($job->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $job->load('applications.user.profile');
+        
+        return view('jobs.applicants', compact('job'));
+    }
 }

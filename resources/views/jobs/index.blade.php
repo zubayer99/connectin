@@ -4,23 +4,6 @@
             
             <!-- Sidebar: My Jobs & Filters -->
             <div class="col-span-1 space-y-4">
-                <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
-                    <div class="p-4 border-b border-gray-100 dark:border-gray-700">
-                        <h3 class="font-bold text-gray-900 dark:text-gray-100 flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
-                            My Jobs
-                        </h3>
-                    </div>
-                    <div class="p-0">
-                        <a href="{{ route('jobs.create') }}" class="block px-4 py-3 text-linkedin-blue font-bold hover:bg-blue-50 dark:hover:bg-gray-700 transition">
-                            <span class="flex items-center">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                                Post a free job
-                            </span>
-                        </a>
-                        <a href="#" class="block px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                             <span class="flex items-center">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                                 Practice Interview
                             </span>
                         </a>

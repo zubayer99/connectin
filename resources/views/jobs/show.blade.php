@@ -17,13 +17,35 @@
                             <span>{{ $job->type }}</span>
                         </div>
                         <div class="flex space-x-3">
-                            <button class="bg-linkedin-blue text-white px-6 py-2 rounded-full font-bold hover:bg-linkedin-dark transition flex items-center">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                                Apply Now
-                            </button>
-                            <button class="border border-linkedin-blue text-linkedin-blue px-6 py-2 rounded-full font-bold hover:bg-blue-50 transition">
-                                Save
-                            </button>
+                             @if(Auth::id() === $job->user_id)
+                                <a href="{{ route('jobs.applicants', $job) }}" class="bg-linkedin-blue text-white px-6 py-2 rounded-full font-bold hover:bg-linkedin-dark transition flex items-center">
+                                    View Applicants ({{ $job->applications()->count() }})
+                                </a>
+                             @elseif($job->isAppliedBy(Auth::user()))
+                                <button disabled class="bg-green-600 text-white px-6 py-2 rounded-full font-bold cursor-not-allowed flex items-center">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    Applied
+                                </button>
+                             @else
+                                <form action="{{ route('jobs.apply', $job) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="bg-linkedin-blue text-white px-6 py-2 rounded-full font-bold hover:bg-linkedin-dark transition flex items-center">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                        Easy Apply
+                                    </button>
+                                </form>
+                             @endif
+
+                             @if(Auth::id() !== $job->user_id)
+                                <form action="{{ route('saved-items.store') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="id" value="{{ $job->id }}">
+                                    <input type="hidden" name="type" value="job">
+                                    <button class="border border-linkedin-blue text-linkedin-blue px-6 py-2 rounded-full font-bold hover:bg-blue-50 transition">
+                                        {{ Auth::user()->hasSaved($job) ? 'Unsave' : 'Save' }}
+                                    </button>
+                                </form>
+                             @endif
                         </div>
                     </div>
 

@@ -19,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \App\Models\Connection::observe(\App\Observers\ConnectionObserver::class);
+        \App\Models\Like::observe(\App\Observers\LikeObserver::class);
+        \App\Models\Comment::observe(\App\Observers\CommentObserver::class);
     }
 }

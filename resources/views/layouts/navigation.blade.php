@@ -12,6 +12,9 @@
                 <!-- Search Bar -->
                 <div class="hidden sm:flex items-center ms-4">
                     <form action="{{ route('search.index') }}" method="GET" class="relative">
+                        @if(request('type'))
+                            <input type="hidden" name="type" value="{{ request('type') }}">
+                        @endif
                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                             <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
@@ -34,11 +37,8 @@
                     <span class="text-xs hidden md:block">My Network</span>
                 </a>
 
-                <a href="#" class="flex flex-col items-center justify-center text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white group">
-                    <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"></path><path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z"></path></svg>
-                    <span class="text-xs hidden md:block">Jobs</span>
-                </a>
-                    <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd"></path></svg>
+                <a href="{{ route('messaging.index') }}" class="flex flex-col items-center justify-center text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white group {{ request()->routeIs('messaging.*') ? 'text-black dark:text-white border-b-2 border-black dark:border-white' : '' }}">
+                     <svg class="w-6 h-6 mb-1 group-hover:fill-current" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd"></path></svg>
                     <span class="text-xs hidden md:block">Messaging</span>
                 </a>
 
@@ -47,8 +47,15 @@
                     <span class="text-xs hidden md:block">Jobs</span>
                 </a>
 
-                <a href="#" class="flex flex-col items-center justify-center text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white group">
-                    <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path></svg>
+                <a href="{{ route('notifications.index') }}" class="flex flex-col items-center justify-center text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white group relative {{ request()->routeIs('notifications.*') ? 'text-black dark:text-white border-b-2 border-black dark:border-white' : '' }}">
+                    <div class="relative">
+                        <svg class="w-6 h-6 mb-1 group-hover:fill-current" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path></svg>
+                        @if(Auth::user()->unreadNotifications->count() > 0)
+                            <span class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                                {{ Auth::user()->unreadNotifications->count() }}
+                            </span>
+                        @endif
+                    </div>
                     <span class="text-xs hidden md:block">Notifications</span>
                 </a>
 
@@ -72,6 +79,10 @@
 
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Profile') }}
+                            </x-dropdown-link>
+                            
+                            <x-dropdown-link :href="route('saved-items.index')">
+                                {{ __('Saved Items') }}
                             </x-dropdown-link>
 
                             <div class="border-t border-gray-100 dark:border-gray-600"></div>

@@ -5,6 +5,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\JobController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\MessagingController;
+use App\Http\Controllers\SavedItemController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -36,6 +39,21 @@ Route::middleware('auth')->group(function () {
     Route::get('/jobs/create', [JobController::class, 'create'])->name('jobs.create');
     Route::post('/jobs', [JobController::class, 'store'])->name('jobs.store');
     Route::get('/jobs/{job}', [JobController::class, 'show'])->name('jobs.show');
+    Route::post('/jobs/{job}/apply', [JobController::class, 'apply'])->name('jobs.apply');
+    Route::get('/jobs/{job}/applicants', [JobController::class, 'applicants'])->name('jobs.applicants');
+    
+    // Notifications
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    
+    // Messaging
+    Route::get('/messaging', [MessagingController::class, 'index'])->name('messaging.index');
+    Route::post('/messaging', [MessagingController::class, 'store'])->name('messaging.store');
+    Route::get('/messaging/{conversation}', [MessagingController::class, 'show'])->name('messaging.show');
+    Route::post('/messaging/{conversation}', [MessagingController::class, 'reply'])->name('messaging.reply');
+
+    // Saved Items
+    Route::get('/saved-items', [SavedItemController::class, 'index'])->name('saved-items.index');
+    Route::post('/saved-items', [SavedItemController::class, 'store'])->name('saved-items.store');
 });
 
 require __DIR__.'/auth.php';

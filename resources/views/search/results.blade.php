@@ -1,77 +1,109 @@
 <x-app-layout>
-    <div class="py-8">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-6">
-            
-            <!-- Sidebar Filters (Placeholder) -->
-            <div class="col-span-1 hidden md:block">
-                 <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden p-4">
-                     <h3 class="font-medium text-gray-900 dark:text-gray-100 mb-4">On this page</h3>
-                     <div class="space-y-2">
-                         <div class="flex items-center text-gray-600 dark:text-gray-400">
-                             <input type="radio" checked class="mr-2 text-linkedin-blue focus:ring-linkedin-blue"> People
-                         </div>
-                         <div class="flex items-center text-gray-600 dark:text-gray-400">
-                             <input type="radio" disabled class="mr-2 text-gray-300"> Jobs (Coming soon)
-                         </div>
-                         <div class="flex items-center text-gray-600 dark:text-gray-400">
-                             <input type="radio" disabled class="mr-2 text-gray-300"> Companies (Coming soon)
-                         </div>
-                     </div>
-                 </div>
-            </div>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex flex-col md:flex-row gap-6">
 
+            <!-- Sidebar Filters / Types -->
+            <div class="w-full md:w-1/4">
+                <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+                    <div class="p-4 border-b border-gray-100 dark:border-gray-700">
+                        <h2 class="font-bold text-gray-900 dark:text-gray-100">Search Results</h2>
+                    </div>
+                    <div class="flex flex-col text-sm text-gray-600 dark:text-gray-400">
+                         <a href="{{ route('search.index', ['q' => $query, 'type' => 'people']) }}" class="px-4 py-3 {{ $type === 'people' ? 'border-l-4 border-linkedin-blue bg-blue-50 dark:bg-gray-700 text-linkedin-blue font-bold' : 'hover:bg-gray-50 dark:hover:bg-gray-700' }}">
+                             People
+                         </a>
+                         <a href="{{ route('search.index', ['q' => $query, 'type' => 'jobs']) }}" class="px-4 py-3 {{ $type === 'jobs' ? 'border-l-4 border-linkedin-blue bg-blue-50 dark:bg-gray-700 text-linkedin-blue font-bold' : 'hover:bg-gray-50 dark:hover:bg-gray-700' }}">
+                             Jobs
+                         </a>
+                         <a href="{{ route('search.index', ['q' => $query, 'type' => 'posts']) }}" class="px-4 py-3 {{ $type === 'posts' ? 'border-l-4 border-linkedin-blue bg-blue-50 dark:bg-gray-700 text-linkedin-blue font-bold' : 'hover:bg-gray-50 dark:hover:bg-gray-700' }}">
+                             Posts
+                         </a>
+                    </div>
+                </div>
+            </div>
+            
             <!-- Main Results -->
-            <div class="col-span-1 md:col-span-3 space-y-4">
-                <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Results for "{{ $query }}"</h2>
-                
-                <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden divide-y divide-gray-100 dark:divide-gray-700">
-                    @forelse($users as $user)
-                        <div class="p-4 flex items-start">
-                             <img class="h-16 w-16 rounded-full object-cover border border-gray-200" src="{{ $user->profile?->avatar_path ? asset('storage/'.$user->profile->avatar_path) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&size=64&color=7F9CF5&background=EBF4FF' }}" alt="">
-                             <div class="ml-4 flex-1">
-                                 <div class="flex justify-between items-start">
-                                     <div>
-                                         <a href="{{ route('profile.show', $user) }}" class="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:underline">
-                                            {{ $user->name }}
-                                        </a>
-                                        <p class="text-sm text-gray-500">{{ $user->profile?->headline ?? 'Member at Connectin' }}</p>
-                                        <p class="text-xs text-gray-400 mt-1">{{ $user->profile?->location ?? 'Bangladesh' }}</p>
-                                        
-                                        @if(Auth::user()->isConnectedWith($user))
-                                            <p class="text-xs text-green-600 mt-1 font-medium is-connected">• 1st</p>
-                                        @endif
-                                     </div>
-                                     
-                                     <div class="ml-4">
-                                         @if(Auth::id() !== $user->id)
-                                            @if(Auth::user()->isConnectedWith($user))
-                                                <a href="mailto:{{ $user->email }}" class="font-semibold text-gray-600 border border-gray-400 hover:bg-gray-100 px-4 py-1.5 rounded-full transition inline-block">Message</a>
-                                            @elseif(Auth::user()->hasPendingRequestFrom($user))
-                                                <button class="font-semibold text-linkedin-blue border border-linkedin-blue hover:bg-blue-50 px-4 py-1.5 rounded-full transition">Accept</button>
-                                            @elseif(Auth::user()->hasSentRequestTo($user))
-                                                <button class="font-semibold text-gray-500 border border-gray-400 px-4 py-1.5 rounded-full cursor-not-allowed" disabled>Pending</button>
-                                            @else
-                                                <form method="POST" action="{{ route('connection.store') }}">
+            <div class="w-full md:w-3/4">
+                 @if($type === 'people')
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">People</h3>
+                        @forelse($users as $user)
+                             <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 flex items-start space-x-4">
+                                <a href="{{ route('profile.show', $user) }}">
+                                    <img class="h-16 w-16 rounded-full object-cover" src="{{ $user->profile?->avatar_path ? asset('storage/'.$user->profile->avatar_path) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&color=7F9CF5&background=EBF4FF' }}" alt="">
+                                </a>
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <a href="{{ route('profile.show', $user) }}" class="text-lg font-bold text-gray-900 dark:text-gray-100 hover:text-linkedin-blue hover:underline">
+                                                {{ $user->name }}
+                                            </a>
+                                            <p class="text-gray-500">{{ $user->profile?->headline ?? 'Member' }}</p>
+                                            <p class="text-sm text-gray-400">{{ $user->profile?->location ?? 'Bangladesh' }}</p>
+                                        </div>
+                                        @if(Auth::id() !== $user->id)
+                                             @if(Auth::user()->isConnectedWith($user))
+                                                <button class="border border-linkedin-blue text-linkedin-blue px-4 py-1 rounded-full font-bold hover:bg-blue-50 transition">Message</button>
+                                             @elseif(Auth::user()->hasSentRequestTo($user))
+                                                <button disabled class="bg-gray-300 text-white px-4 py-1 rounded-full font-bold cursor-default">Pending</button>
+                                             @else
+                                                <form action="{{ route('connection.store') }}" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="receiver_id" value="{{ $user->id }}">
-                                                    <button type="submit" class="font-semibold text-linkedin-blue border border-linkedin-blue hover:bg-blue-50 px-4 py-1.5 rounded-full transition">Connect</button>
+                                                    <button type="submit" class="border border-linkedin-blue text-linkedin-blue px-4 py-1 rounded-full font-bold hover:bg-blue-50 transition">Connect</button>
                                                 </form>
-                                            @endif
+                                             @endif
                                         @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-gray-500">No people found searching for "{{ $query }}".</p>
+                        @endforelse
+                    </div>
+
+                 @elseif($type === 'jobs')
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">Jobs</h3>
+                        @forelse($jobs as $job)
+                            <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 flex items-start space-x-4 hover:shadow-md transition">
+                                <div class="bg-gray-200 dark:bg-gray-600 h-16 w-16 rounded flex items-center justify-center font-bold text-gray-500 text-xl">
+                                    {{ substr($job->company, 0, 1) }}
+                                </div>
+                                <div class="flex-1">
+                                    <a href="{{ route('jobs.show', $job) }}" class="text-lg font-bold text-linkedin-blue hover:underline">
+                                        {{ $job->title }}
+                                    </a>
+                                    <p class="text-gray-900 dark:text-gray-100 font-semibold">{{ $job->company }}</p>
+                                    <p class="text-gray-500 text-sm">{{ $job->location }} ({{ $job->type }})</p>
+                                    <p class="text-gray-400 text-xs mt-2">{{ $job->created_at->diffForHumans() }}</p>
+                                </div>
+                            </div>
+                        @empty
+                             <p class="text-gray-500">No jobs found searching for "{{ $query }}".</p>
+                        @endforelse
+                    </div>
+
+                 @elseif($type === 'posts')
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">Posts</h3>
+                        @forelse($posts as $post)
+                             <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
+                                <div class="flex space-x-3 mb-2">
+                                     <img class="h-10 w-10 rounded-full object-cover" src="{{ $post->user->profile?->avatar_path ? asset('storage/'.$post->user->profile->avatar_path) : 'https://ui-avatars.com/api/?name='.urlencode($post->user->name).'&color=7F9CF5&background=EBF4FF' }}" alt="">
+                                     <div>
+                                         <a href="{{ route('profile.show', $post->user) }}" class="font-bold text-gray-900 dark:text-gray-100 hover:text-linkedin-blue">{{ $post->user->name }}</a>
+                                         <p class="text-xs text-gray-500">{{ $post->user->profile?->headline }}</p>
                                      </div>
-                                 </div>
+                                </div>
+                                <p class="text-gray-800 dark:text-gray-200 text-sm whitespace-pre-line">{{ Str::limit($post->content, 300) }}</p>
                              </div>
-                        </div>
-                    @empty
-                        <div class="p-8 text-center text-gray-500">
-                            No results found.
-                        </div>
-                    @endforelse
-                </div>
-                
-                <div class="mt-4">
-                    {{ $users->appends(['q' => $query])->links() }}
-                </div>
+                        @empty
+                             <p class="text-gray-500">No posts found searching for "{{ $query }}".</p>
+                        @endforelse
+                    </div>
+                 @endif
+
             </div>
         </div>
     </div>

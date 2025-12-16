@@ -35,7 +35,11 @@
                     <div class="mt-4 flex space-x-3">
                         @if(Auth::id() !== $user->id)
                             @if(Auth::user()->isConnectedWith($user))
-                                <a href="mailto:{{ $user->email }}" class="border border-linkedin-blue text-linkedin-blue px-4 py-1.5 rounded-full font-bold hover:bg-blue-50 transition inline-block">Message</a>
+                                <form action="{{ route('messaging.store') }}" method="POST" class="inline-block">
+                                    @csrf
+                                    <input type="hidden" name="receiver_id" value="{{ $user->id }}">
+                                    <button type="submit" class="border border-linkedin-blue text-linkedin-blue px-4 py-1.5 rounded-full font-bold hover:bg-blue-50 transition">Message</button>
+                                </form>
                             @elseif(Auth::user()->hasPendingRequestFrom($user))
                                 <form method="POST" action="{{ route('connection.update', Auth::user()->pendingReceivedConnections()->where('sender_id', $user->id)->first()->id) }}">
                                     @csrf

@@ -66,15 +66,28 @@
                                     <p class="text-xs text-gray-400">{{ $post->created_at->diffForHumans() }} • <span class="font-serif">Global</span></p>
                                 </div>
                              </div>
-                             @if($post->user_id === Auth::id())
-                                <form method="POST" action="{{ route('posts.destroy', $post) }}" onsubmit="return confirm('Delete this post?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="text-gray-400 hover:text-red-500">
-                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                    </button>
-                                </form>
-                             @endif
+                             <div x-data="{ open: false }" class="relative">
+                                <button @click="open = !open" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
+                                </button>
+                                <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-20" style="display: none;">
+                                    <form action="{{ route('saved-items.store') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{ $post->id }}">
+                                        <input type="hidden" name="type" value="post">
+                                        <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                            {{ Auth::user()->hasSaved($post) ? 'Unsave' : 'Save' }}
+                                        </button>
+                                    </form>
+                                    @if($post->user_id === Auth::id())
+                                        <form method="POST" action="{{ route('posts.destroy', $post) }}" onsubmit="return confirm('Delete this post?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700">Delete Post</button>
+                                        </form>
+                                    @endif
+                                </div>
+                             </div>
                         </div>
 
                         <!-- Post Content -->
