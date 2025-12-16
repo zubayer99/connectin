@@ -34,8 +34,24 @@
                 
                     <div class="mt-4 flex space-x-3">
                         @if(Auth::id() !== $user->id)
-                            <button class="bg-linkedin-blue text-white px-4 py-1.5 rounded-full font-bold hover:bg-linkedin-dark transition">Connect</button>
-                            <button class="border border-gray-500 text-gray-600 dark:text-gray-400 px-4 py-1.5 rounded-full font-bold hover:bg-gray-100 dark:hover:bg-gray-700 transition">Message</button>
+                            @if(Auth::user()->isConnectedWith($user))
+                                <a href="mailto:{{ $user->email }}" class="border border-linkedin-blue text-linkedin-blue px-4 py-1.5 rounded-full font-bold hover:bg-blue-50 transition inline-block">Message</a>
+                            @elseif(Auth::user()->hasPendingRequestFrom($user))
+                                <form method="POST" action="{{ route('connection.update', Auth::user()->pendingReceivedConnections()->where('sender_id', $user->id)->first()->id) }}">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="hidden" name="status" value="accepted">
+                                    <button type="submit" class="bg-linkedin-blue text-white px-4 py-1.5 rounded-full font-bold hover:bg-linkedin-dark transition">Accept Invite</button>
+                                </form>
+                            @elseif(Auth::user()->hasSentRequestTo($user))
+                                <button class="bg-gray-400 text-white px-4 py-1.5 rounded-full font-bold cursor-not-allowed">Pending</button>
+                            @else
+                                <form method="POST" action="{{ route('connection.store') }}">
+                                    @csrf
+                                    <input type="hidden" name="receiver_id" value="{{ $user->id }}">
+                                    <button type="submit" class="bg-linkedin-blue text-white px-4 py-1.5 rounded-full font-bold hover:bg-linkedin-dark transition">Connect</button>
+                                </form>
+                            @endif
                         @else
                             <button class="bg-linkedin-blue text-white px-4 py-1.5 rounded-full font-bold hover:bg-linkedin-dark transition">Open to</button>
                             <a href="{{ route('profile.edit_details') }}" class="border border-linkedin-blue text-linkedin-blue px-4 py-1.5 rounded-full font-bold hover:bg-blue-50 transition inline-block">Add profile section</a>

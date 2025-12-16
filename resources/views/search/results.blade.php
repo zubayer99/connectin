@@ -45,7 +45,7 @@
                                      <div class="ml-4">
                                          @if(Auth::id() !== $user->id)
                                             @if(Auth::user()->isConnectedWith($user))
-                                                <button class="font-semibold text-gray-600 border border-gray-400 hover:bg-gray-100 px-4 py-1.5 rounded-full transition">Message</button>
+                                                <a href="mailto:{{ $user->email }}" class="font-semibold text-gray-600 border border-gray-400 hover:bg-gray-100 px-4 py-1.5 rounded-full transition inline-block">Message</a>
                                             @elseif(Auth::user()->hasPendingRequestFrom($user))
                                                 <button class="font-semibold text-linkedin-blue border border-linkedin-blue hover:bg-blue-50 px-4 py-1.5 rounded-full transition">Accept</button>
                                             @elseif(Auth::user()->hasSentRequestTo($user))

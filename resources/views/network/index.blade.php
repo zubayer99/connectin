@@ -9,7 +9,7 @@
                         <h3 class="text-base font-medium text-gray-900 dark:text-gray-100">Manage my network</h3>
                     </div>
                     <div class="p-0">
-                        <a href="#" class="flex justify-between items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition text-gray-600 dark:text-gray-400">
+                        <a href="{{ route('network.index') }}" class="flex justify-between items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition text-gray-600 dark:text-gray-400">
                             <span class="flex items-center">
                                 <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                                 Connections
